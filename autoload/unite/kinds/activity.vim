@@ -19,6 +19,14 @@ let s:kind.action_table.activate = {
 function! s:kind.action_table.activate.func(candidate) "{{{
     call actmngr#activate(a:candidate.action__actid)
 endfunction"}}}
+
+let s:kind.action_table.hotkey = {
+      \ 'description' : 'set hotkey',
+      \ }
+
+function! s:kind.action_table.hotkey.func(candidate) "{{{
+    call actmngr#set_hotkey(a:candidate.action__actid)
+endfunction"}}}
 "}}}
 
 let &cpo = s:save_cpo

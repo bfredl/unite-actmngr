@@ -13,9 +13,9 @@ let s:source = {
       \}
 
 function! s:source.gather_candidates(args, context) "{{{
-    let activities = actmngr#get_activities()
+    let tasks = actmngr#get_tasks()
 
-  return map(activities, "{
+  return map(tasks, "{
         \ 'word' : v:val.desc,
         \ 'action__actid' : v:val.id
         \ }")
