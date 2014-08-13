@@ -1,10 +1,14 @@
 from __future__ import print_function, division
 from os.path import dirname
 from contextlib import contextmanager
+from subprocess import call
 import os,sys
 import json
 import tempfile
-import xutil
+try:
+    import xutil
+except:
+    pass
 
 statefile = "/tmp/renamethisfile"
 
@@ -30,7 +34,10 @@ def state(mode='r'):
 
 class ActivityManager(object):
     def __init__(self):
-        self.wm = xutil.XWinMgr()
+        try:
+            self.wm = xutil.XWinMgr()
+        except:
+            pass
 
     def get_tasks(self):
         tasks = self.wm.get_clients()
@@ -40,7 +47,10 @@ class ActivityManager(object):
 
     def activate(self, task):
         wid = int(task)
-        self.wm.activate(wid)
+        try:
+            self.wm.activate(wid)
+        except:
+            call(['xdotool','windowactivate',str(task)])
 
     def get_hotkeys(self):
         with state() as s:
