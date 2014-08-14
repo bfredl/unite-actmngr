@@ -33,4 +33,12 @@ function! actmngr#set_hotkey(id,...)
     python am.set_hotkey(vim.eval("a:id"),vim.eval("key"))
 endfunction
 
+function! s:switcher_app_settings()
+    inoremap <buffer><expr> <c-t> unite#do_action('hotkey')
+endfunction
 
+function! actmngr#switcher_app()
+    au FileType unite call <sid>switcher_app_settings()
+    Unite -buffer-name=tasks -start-insert -no-split -no-quit activities
+    au FocusLost * qa
+endfunction
