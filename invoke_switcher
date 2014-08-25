@@ -1,0 +1,9 @@
+#!/bin/bash
+#TODO: neovim!
+SNAME=SWITCHER
+if gvim --serverlist | grep $SNAME; then
+    gvim --servername $SNAME --remote-expr "actmngr#activate_switcher()"
+else
+    gvim --servername $SNAME -c "call actmngr#switcher_app()"
+fi
+

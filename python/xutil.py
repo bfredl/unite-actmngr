@@ -2,12 +2,15 @@ import Xlib
 from Xlib import X, Xatom, Xutil, display
 from Xlib.protocol import event
 from collections import namedtuple
+from subprocess import call
 atoms = [
         "_NET_CLIENT_LIST",
         "_NET_WM_NAME",
         "_NET_WM_DESKTOP",
         "_NET_ACTIVE_WINDOW",
         "_NET_CURRENT_DESKTOP",
+        "_NET_WM_STATE",
+        "_NET_WM_STATE_HIDDEN",
         ]
 
 XTask = namedtuple('XTask',['wid','title','desktop'])
@@ -32,6 +35,13 @@ class XWinMgr(object):
             desktop = o.get_full_property(self._NET_WM_DESKTOP, Xatom.CARDINAL).value[0]
             l.append( XTask(wid,title,desktop) )
         return l
+
+    def get_active_window(self):
+        return self.root.get_full_property(self._NET_ACTIVE_WINDOW, Xatom.WINDOW).value[0]
+
+    def iconify(self, win):
+        #self.setEwmhProp(win, self._NET_WM_STATE, [1, self._NET_WM_STATE_HIDDEN, 0, 1])
+        call(['xdotool','windowminimize', str(win)])
 
     def activate(self, wid, desktop=None):
         o = self.disp.create_resource_object("window", wid)

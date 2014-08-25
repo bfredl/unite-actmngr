@@ -40,10 +40,16 @@ class ActivityManager(object):
             pass
 
     def get_tasks(self):
-        tasks = self.wm.get_clients()
+        wins = self.wm.get_clients()
+        tasks = []
         with state() as s:
             # FIXME: task labels type unstable
-            return [ { 'desc': t.title, 'id': t.wid, 'hotkey': s.get(str(t.wid),{}).get('hotkey') } for t in tasks ]
+            for w in wins:
+                ts = s.get(str(w.wid),{})
+                if ts.get('is_switcher'): 
+                    continue
+                tasks.append( { 'desc': w.title, 'id': w.wid, 'hotkey': ts.get('hotkey') } )
+        return tasks
 
     def activate(self, task):
         wid = int(task)
@@ -67,4 +73,6 @@ class ActivityManager(object):
                     del v["hotkey"]
             s.setdefault(task,{})["hotkey"] = hotkey
 
-
+    def set_switcher(self, task):
+        with state('w') as s:
+            s.setdefault(task,{})["is_switcher"] = True
