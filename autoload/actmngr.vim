@@ -5,10 +5,12 @@ from os.path import join, dirname
 fpath = vim.eval("s:SourcedFile")
 pydir = join(dirname(dirname(fpath)),"python")
 sys.path.append(pydir)
-from actmngr import ActivityManager
+import actmngr
 m  = sys.stdout
 sys.stdout = cStringIO.StringIO()
-am = ActivityManager()
+am = actmngr.ActivityManager()
+# in case gvim this will be wrong, fixed in GuiEnter
+mywid = am.wm.get_active_window()
 sys.stdout = m
 def actmngr_get_tasks():
     tasks = am.get_tasks()
@@ -16,6 +18,18 @@ def actmngr_get_tasks():
     return res
 
 EOF
+function! actmngr#on_gui_enter()
+    python mywid = am.wm.get_active_window()
+endfunction
+
+function! actmngr#on_buflist_update()
+    python actmngr.dump_buflist(vim, mywid)
+endfunction
+
+function! actmngr#switch_to_buf(bufid)
+    let g:tbuf = a:bufid
+    exe "b".a:bufid
+endfunction
 
 function! actmngr#get_tasks()
     return pyeval("actmngr_get_tasks()")

@@ -44,10 +44,12 @@ class XWinMgr(object):
         call(['xdotool','windowminimize', str(win)])
 
     def activate(self, wid, desktop=None):
-        o = self.disp.create_resource_object("window", wid)
-        self.setEwmhProp(o, self._NET_ACTIVE_WINDOW, [1, X.CurrentTime, wid])
-        if desktop is not None:
-            self.setEwmhProp(self.root, self._NET_CURRENT_DESKTOP, [int(desktop), X.CurrentTime])
+        call(['xdotool','windowactivate',str(wid)])
+        if False:
+            o = self.disp.create_resource_object("window", wid)
+            self.setEwmhProp(o, self._NET_ACTIVE_WINDOW, [1, X.CurrentTime, wid])
+            if desktop is not None:
+                self.setEwmhProp(self.root, self._NET_CURRENT_DESKTOP, [int(desktop), X.CurrentTime])
 
     def setEwmhProp(self, win, prop, data, mask=None):
         if type(data) is str:
