@@ -77,7 +77,6 @@ class ActivityManager(object):
                     call(['vim', '--servername', b['srv'], '--remote-expr', 'actmngr#switch_to_buf({})'.format(b['nbr'])])
                     break
 
-
     def get_buffers(self):
         for f in os.listdir(vimdir):
             dat = json.load(open(os.path.join(vimdir, f)))
@@ -100,9 +99,11 @@ class ActivityManager(object):
                     del v["hotkey"]
             s.setdefault(task,{})["hotkey"] = hotkey
 
-    def set_switcher(self, task):
+    def set_switcher(self, wid):
         with state('w') as s:
-            s.setdefault(task,{})["is_switcher"] = True
+            s.setdefault('win:{}'.format(wid),{})["is_switcher"] = True
+        self.wm.set_sticky(wid)
+
 
 vimdir = ensuredir(os.path.join(rtdir, 'vim'))
 def dump_buflist(vim, wid):

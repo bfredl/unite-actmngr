@@ -37,6 +37,9 @@ endfunction
 
 function! actmngr#activate(id)
     python am.activate(vim.eval("a:id"))
+    if exists("g:actmngr_switcher")
+        python am.wm.iconify(mywid)
+    endif
 endfunction
 
 function! actmngr#set_hotkey(id,...)
@@ -54,14 +57,15 @@ function! s:switcher_app_settings()
 endfunction
 
 function! actmngr#switcher_app()
+    let g:actmngr_switcher = 1
     python mywid = am.wm.get_active_window()
-    python am.set_switcher(mywid)
     au FileType unite call <sid>switcher_app_settings()
-    au FocusLost * python am.wm.iconify(mywid)
     call actmngr#activate_switcher()
+    python am.set_switcher(mywid)
+    python print(mywid)
 endfunction
 
 function! actmngr#activate_switcher()
     Unite -buffer-name=tasks -no-split activities
-    python am.wm.activate(mywid)
+    python am.wm.activate(mywid,True)
 endfunction

@@ -43,7 +43,13 @@ class XWinMgr(object):
         #self.setEwmhProp(win, self._NET_WM_STATE, [1, self._NET_WM_STATE_HIDDEN, 0, 1])
         call(['xdotool','windowminimize', str(win)])
 
-    def activate(self, wid, desktop=None):
+    def set_sticky(self, win):
+        call(['wmctrl', '-r', str(win), '-b', 'add,sticky'])
+
+    def activate(self, wid, movedesktop=False):
+        if movedesktop:
+            desk = self.root.get_full_property(self._NET_CURRENT_DESKTOP, Xatom.CARDINAL).value
+            call(['xdotool','set_desktop_for_window', str(wid), str(desk[0])])
         call(['xdotool','windowactivate',str(wid)])
         if False:
             o = self.disp.create_resource_object("window", wid)
